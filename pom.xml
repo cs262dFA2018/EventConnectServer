@@ -18,8 +18,8 @@
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <groupId>edu.calvin.cs262.lab09</groupId>
-    <artifactId>monopoly</artifactId>
+    <groupId>edu.calvin.cs262.cs262d</groupId>
+    <artifactId>EventConnect</artifactId>
 
     <properties>
 
