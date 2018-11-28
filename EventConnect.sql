@@ -28,7 +28,7 @@ CREATE TABLE JoinedEvents(
 );
 
 
-INSERT INTO Users VALUES (1, 'abc@aol.com', 'alpha7', 
+INSERT INTO Users VALUES (1, 'abc@aol.com', 'alpha7',
 	'AlphaBingCongo7');
 INSERT INTO Users VALUES (2, 'cba@aol.com', 'beta2',
 	'AlphaBingCongo8');
@@ -46,8 +46,7 @@ INSERT INTO Events VALUES(2,1,'RIP Joe', 'Rest in peace Joe',
 	10.25,1,50, 'Funeral');
 
 INSERT INTO Events VALUES(3,3,'Trump Baby Balloon', 
-	'Join the world famous 
-	''Baby Trump'' in Rosa Parks Circle on October 27th!',
+	'Join the world famous ''Baby Trump'' in Rosa Parks Circle on October 27th!',
 	'2018-10-27 10:00:00', 'Rosa Park Circle', 
 	0.00,1,50, 'Rally');
 
@@ -56,11 +55,8 @@ INSERT INTO JoinedEvents VALUES (1,2);
 INSERT INTO JoinedEvents VALUES (1,3);
 INSERT INTO JoinedEvents VALUES (2,2);
 INSERT INTO JoinedEvents VALUES (3,2);
---INSERT INTO JoinedEvents VALUES (4,1);
 
-SELECT * FROM Users;
-SELECT Title, Time FROM Events;
-SELECT * FROM JoinedEvents; 
+
 
 
 
