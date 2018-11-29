@@ -26,6 +26,22 @@ public class Event {
     public Event() {
         // The JSON marshaller used by Endpoints requires this default constructor.
     }
+
+    public Event(int id, int userId, String title, String description, Timestamp time, String location, float cost,
+                 int threshold, int capacity, String category) {
+        this.id = id;
+        this.userId = userId;
+        this.title = title;
+        this.description = description;
+        this.time = time;
+        this.location = location;
+        this.cost = cost;
+        this.threshold = threshold;
+        this.capacity = capacity;
+        this.category = category;
+        this.count = 0;
+    }
+
     public Event(int id, int userId, String title, String description, Timestamp time, String location, float cost,
                  int threshold, int capacity, String category, int count) {
         this.id = id;
