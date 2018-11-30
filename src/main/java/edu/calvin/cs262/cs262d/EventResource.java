@@ -92,8 +92,8 @@ public class EventResource {
      * GET
      * This method gets the event from the Event table with the given ID.
      *
-     * @param id the ID of the requested player
-     * @return if the player exists, a JSON-formatted player record, otherwise an invalid/empty JSON entity
+     * @param id the ID of the requested event
+     * @return if the event exists, a JSON-formatted event record, otherwise an invalid/empty JSON entity
      * @throws SQLException
      */
     @ApiMethod(path = "event/{id}", httpMethod = GET)
@@ -276,7 +276,7 @@ public class EventResource {
      * If the event with the given ID doesn't exist, SQL won't delete anything.
      * This makes DELETE idempotent.
      *
-     * @param eventID the ID for the player, assumed to be unique
+     * @param eventID the ID for the event, assumed to be unique
      * @param token username:password base64 encoded
      * @throws SQLException
      */
@@ -422,13 +422,10 @@ public class EventResource {
         return encodedString;
     }
 
-    /**
-     * User Table Functions
-     * TODO: Move to separate UserResource class
-     *********************************************/
 
     /*
-     * This function will check if a user is authorized given the username:password encoded in base64
+     * This function will check if a user is authorized to edit an event
+     * given the username:password encoded in base64 and the event ID
      */
     private boolean isAuthorized(String base64UsernamePassword, int eventID) {
         //TODO: check if user is authorized
