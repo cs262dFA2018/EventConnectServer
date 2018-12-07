@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users (
 	ID integer PRIMARY KEY,
-	Username Varchar(20) NOT NULL,
+	Username Varchar(20) NOT NULL UNIQUE,
 	Password Varchar(50) NOT NULL
 );
 
