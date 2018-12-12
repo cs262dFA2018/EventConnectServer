@@ -11,8 +11,8 @@ CREATE TABLE Users (
 CREATE TABLE Events(
 	Id integer PRIMARY KEY,
 	UserID integer REFERENCES Users(ID),
-	Title Varchar(25) NOT NULL, 
-	Description Varchar(250) NOT NULL,
+	Title Varchar(50) NOT NULL,
+	Description Varchar(1000) NOT NULL,
 	Time timestamp,
 	Location Varchar(150),
 	Cost numeric, 

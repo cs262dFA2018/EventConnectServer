@@ -372,7 +372,7 @@ public class EventResource {
                                 "WHERE id=%d;",
                         getValueStringOrNull(event.getTitle()),
                         getValueStringOrNull(event.getDescription()),
-                        (event.getTime() == null) ? "NULL" : event.getTime().toString(),
+                        (event.getTime() == null) ? "NULL" : getValueStringOrNull(event.getTime().toString()),
                         getValueStringOrNull(event.getLocation()),
                         (event.getCost() == 0) ? "NULL" : Float.toString(Float.max(event.getCost(), 0)),
                         (event.getThreshold() == 0) ? "NULL" : Integer.toString(event.getThreshold()),
