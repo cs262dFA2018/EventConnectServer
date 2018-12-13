@@ -122,6 +122,59 @@ public class UserResource {
     }
 
     /**
+     * GET
+     * This method gets the user from the Users table with the given ID.
+     *
+     * @param token username:password base64 encoded
+     * @return if the player exists, a JSON-formatted user record, otherwise an invalid/empty JSON entity
+     * @throws SQLException
+     */
+    @ApiMethod(path = "user/events/{token}", httpMethod = GET)
+    public List<Event> getUserEvents(@Named("token") String token) throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        // get the userID from the token
+        String username = decodeBase64(token).split(":")[0];
+        int userID = getUserId(username);
+        List<Event> result = new ArrayList<Event>();
+        try {
+            connection = DriverManager.getConnection(System.getProperty("cloudsql"));
+            statement = connection.createStatement();
+            resultSet = selectUserEvents(userID, statement);
+            while (resultSet.next()) {
+                Event e = new Event(
+                        resultSet.getInt(1),        // id
+                        resultSet.getInt(2),        // userID
+                        resultSet.getString(3),     // title
+                        resultSet.getString(4),     // description
+                        resultSet.getTimestamp(5),  // time
+                        resultSet.getString(6),     // location
+                        resultSet.getFloat(7),      // cost
+                        resultSet.getInt(8),        // threshold
+                        resultSet.getInt(9),        // capacity
+                        resultSet.getString(10),    // category
+                        resultSet.getInt(11)        // count
+                );
+                result.add(e);
+            }
+        } catch (SQLException e) {
+            throw (e);
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return result;
+    }
+
+    /**
      * POST
      * This method creates an instance of user with a new, unique ID
      * number. We do this because POST is not idempotent, meaning that running
@@ -340,6 +393,50 @@ public class UserResource {
         return encodedString;
     }
 
+    /*
+     * This function returns the userID from the Users table given a username
+     */
+    private int getUserId(String username) throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        int userID;
+        try {
+            connection = DriverManager.getConnection(System.getProperty("cloudsql"));
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(
+                    String.format("SELECT ID FROM Users WHERE Username='%s'", username)
+            );
+            if (resultSet.next()) {
+                userID = resultSet.getInt(1);
+            } else {
+                throw new RuntimeException("failed to find user with the given username");
+            }
+        } catch (SQLException e) {
+            throw (e);
+        } finally {
+            if (resultSet != null) { resultSet.close(); }
+            if (statement != null) { statement.close(); }
+            if (connection != null) { connection.close(); }
+        }
+        return userID;
+    }
 
+    /*
+     * This function gets all events in the Events table
+     */
+    private ResultSet selectUserEvents(int UserID, Statement statement) throws SQLException {
+        return statement.executeQuery(
+                String.format("SELECT Events.*, " +
+                        "COUNT (JoinedEvents.EventID) " +
+                        "FROM Events " +
+                        "LEFT JOIN JoinedEvents " +
+                        "ON JoinedEvents.EventID=Events.ID " +
+                        "WHERE JoinedEvents.UserID=%s" +
+                        "GROUP BY Events.ID " +
+                        "ORDER BY Events.Time;"
+                        , UserID)
+        );
+    }
 
 }
