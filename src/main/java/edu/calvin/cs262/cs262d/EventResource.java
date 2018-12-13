@@ -227,6 +227,47 @@ public class EventResource {
 
     /**
      * PUT
+     * This method unjoins a user from the Users table with an event in the Events table
+     * to indicate the user has joined the event
+     * @param eventID the ID of the event to join
+     * @param token username:password encoded in base64
+     * @return event in JSON format with updated count
+     * @throws SQLException
+     */
+    @ApiMethod(path="event/{eventID}/unjoin/{token}", httpMethod=PUT)
+    public Event unjoinEvent(@Named("eventID") int eventID, @Named("token") String token) throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        // get the userID from the token
+        String username = decodeBase64(token).split(":")[0];
+        int userID = getUserId(username);
+        try {
+            connection = DriverManager.getConnection(System.getProperty("cloudsql"));
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(
+                    String.format("SELECT * FROM JoinedEvents " +
+                                    "WHERE EventID=%d AND UserID=%d;",
+                            eventID, userID)
+            );
+            if (!resultSet.next()) {
+                statement.executeUpdate(
+                        String.format("DELETE FROM JoinedEvents WHERE UserID=%d AND EventID=%d;",
+                                eventID, userID)
+                );
+            }
+        } catch (SQLException e) {
+            throw (e);
+        } finally {
+            if (resultSet != null) { resultSet.close(); }
+            if (statement != null) { statement.close(); }
+            if (connection != null) { connection.close(); }
+        }
+        return getEvent(eventID);
+    }
+
+    /**
+     * PUT
      * This method creates/updates an instance of Event with a given ID.
      * If the Event doesn't exist, create a new Event using the given field values.
      * If the Event already exists, update the fields using the new Event field values.
