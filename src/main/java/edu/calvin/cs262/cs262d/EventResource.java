@@ -250,10 +250,10 @@ public class EventResource {
                                     "WHERE EventID=%d AND UserID=%d;",
                             eventID, userID)
             );
-            if (!resultSet.next()) {
+            if (resultSet.next()) {
                 statement.executeUpdate(
                         String.format("DELETE FROM JoinedEvents WHERE UserID=%d AND EventID=%d;",
-                                eventID, userID)
+                                userID, eventID)
                 );
             }
         } catch (SQLException e) {
